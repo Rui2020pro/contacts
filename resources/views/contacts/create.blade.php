@@ -28,19 +28,28 @@
             <div class="row">
                 <div class="col-md-12">
                     <h1 class="text-center">Create Contact</h1>
-                    <form action="/{{ route('contacts.create')}}" method="POST">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>                       
+                    @endif
+                    <form action="{{ route('contacts.store')}}" method="POST">
                         @csrf
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Name" required>
+                            <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}" placeholder="Name" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                            <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}" placeholder="Email" required>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <input type="text" name="phone" class="form-control" id="phone" placeholder="Phone" required>
+                            <input type="text" name="phone" class="form-control" id="phone" value="{{ old('phone') }}" placeholder="Phone" required>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary mt-2">Submit</button>

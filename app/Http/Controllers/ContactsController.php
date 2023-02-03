@@ -37,12 +37,22 @@ class ContactsController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request
-        $validation = $request->validate([
+        $rules = [
             'name' => 'required|min:5',
             'email' => 'required|email',
-            'phone' => 'required|digits:9',
-        ]);
+            'phone' => 'required|regex:/[0-9]{9}/',
+        ];
+
+        $messages = [
+            'name.required' => 'Name is required',
+            'name.min' => 'Name must be at least 5 characters',
+            'email.required' => 'Email is required',
+            'email.email' => 'Email is invalid',
+            'phone.required' => 'Phone is required',
+            'phone.regex' => 'Phone is invalid',
+        ];
+
+        $validation = $request->validate($rules, $messages);
 
         if ($validation) {
             // Create a new contact
@@ -55,6 +65,8 @@ class ContactsController extends Controller
             //return redirect()->route('contacts.index');
 
             return redirect()->route('contacts.index')->with('success', 'Contact created successfully.');
+        }else{
+            return redirect()->route('contacts.create')->with('error', 'Contact creation failed.');
         }
     }
 
