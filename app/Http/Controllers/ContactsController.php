@@ -37,7 +37,25 @@ class ContactsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request
+        $validation = $request->validate([
+            'name' => 'required|min:5',
+            'email' => 'required|email',
+            'phone' => 'required|digits:9',
+        ]);
+
+        if ($validation) {
+            // Create a new contact
+            $contact = new Contacts();
+            $contact->name = $request->name;
+            $contact->email = $request->email;
+            $contact->phone = $request->phone;
+            $contact->save();
+
+            //return redirect()->route('contacts.index');
+
+            return redirect()->route('contacts.index')->with('success', 'Contact created successfully.');
+        }
     }
 
     /**
