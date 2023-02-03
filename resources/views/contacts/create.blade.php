@@ -21,20 +21,14 @@
         </style>
     </head>
     <body class="antialiased">
-        <!-- Create an table to contacts where display the contacts - name, email, phone -->
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-            @foreach ($contacts as $contact)
-                <tr>
-                    <td>{{ $contact->name }}</td>
-                    <td>{{ $contact->email }}</td>
-                    <td>{{ $contact->phone }}</td>
-                </tr>
-            @endforeach
-        </table>
+        <!-- Create an form to contacts - name, email, phone -->
+        <form action="/{{ route ('contacts.create')}}" method="POST">
+            @csrf
+            <input type="text" name="name" placeholder="Name">
+            <input type="email" name="email" placeholder="Email">
+            <input type="text" name="phone" placeholder="Phone">
+            <button type="submit">Submit</button>
+        </form>
+
     </body>
 </html>

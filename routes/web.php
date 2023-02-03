@@ -18,4 +18,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/contacts', [ContactsController::class, 'index'])->name('contacts.index');
+// Create routes to create, edit, delete, and view contacts
+Route::get('/contacts', [ContactsController::class, 'index']);
+Route::get('/contacts/create', [ContactsController::class, 'create']);
+Route::post('/contacts', [ContactsController::class, 'store']);
+Route::get('/contacts/{contact}/edit', [ContactsController::class, 'edit']);
+Route::put('/contacts/{contact}', [ContactsController::class, 'update']);
+Route::delete('/contacts/{contact}', [ContactsController::class, 'destroy']);
+Route::get('/contacts/{contact}', [ContactsController::class, 'show']);
