@@ -43,8 +43,8 @@ class ContactsController extends Controller
     {
         $rules = [
             'name' => 'required|min:5',
-            'email' => 'required|email',
-            'phone' => 'required|regex:/[0-9]{9}/',
+            'email' => 'required|email|unique:contacts',
+            'phone' => 'required|regex:/[0-9]{9}/|unique:contacts',
         ];
 
         $messages = [
@@ -52,8 +52,10 @@ class ContactsController extends Controller
             'name.min' => 'Name must be at least 5 characters',
             'email.required' => 'Email is required',
             'email.email' => 'Email is invalid',
+            'email.unique' => 'Email already exists',
             'phone.required' => 'Phone is required',
             'phone.regex' => 'Phone is invalid',
+            'phone.unique' => 'Phone already exists',
         ];
 
         $validation = $request->validate($rules, $messages);
