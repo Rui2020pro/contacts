@@ -19,10 +19,10 @@ Route::get('/', function () {
 });
 
 // Create routes to create, edit, delete, and view contacts
-Route::get('/contacts', [ContactsController::class, 'index']);
-Route::get('/contacts/create', [ContactsController::class, 'create']);
-Route::post('/contacts', [ContactsController::class, 'store']);
-Route::get('/contacts/{contact}/edit', [ContactsController::class, 'edit']);
-Route::put('/contacts/{contact}', [ContactsController::class, 'update']);
-Route::delete('/contacts/{contact}', [ContactsController::class, 'destroy']);
-Route::get('/contacts/{contact}', [ContactsController::class, 'show']);
+Route::get('/contacts', [ContactsController::class, 'index'])->name('contacts.index');
+Route::get('/contacts/create', [ContactsController::class, 'create'])->name('contacts.create'); 
+Route::post('/contacts', [ContactsController::class, 'store'])->name('contacts.store');
+Route::get('/contacts/{contact}/edit', [ContactsController::class, 'edit'])->name('contacts.edit');
+Route::put('/contacts/{contact}', [ContactsController::class, 'update'])->name('contacts.update');
+Route::delete('/contacts/{contact}', [ContactsController::class, 'destroy'])->name('contacts.destroy');
+Route::get('/contacts/{contact}', [ContactsController::class, 'show'])->name('contacts.show');
