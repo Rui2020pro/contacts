@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contacts;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\ToSweetAlert;
 
 class ContactsController extends Controller
 {
@@ -73,12 +74,20 @@ class ContactsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Contacts  $contacts
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Contacts $contacts)
+    public function show(int $id)
     {
-        //
+        $contact_show = Contacts::find($id);
+
+        if (!$contact_show) {
+            return redirect()->route('contacts.index')->with('error', 'Contact not found.');
+        }
+
+        return view('contacts.create', [
+            'contact_show' => $contact_show
+        ]);
     }
 
     /**
@@ -107,11 +116,18 @@ class ContactsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Contacts  $contacts
+     * int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Contacts $contacts)
+    public function destroy(int $id)
     {
-        //
+        $contact = Contacts::find($id);
+        
+        if ($contact) {
+            $contact->delete();
+            return redirect()->route('contacts.index')->with('success', 'Contact deleted successfully.');
+        }else{
+            return redirect()->route('contacts.index')->with('error', 'Contact deletion failed.');
+        }
     }
 }

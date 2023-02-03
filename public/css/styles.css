@@ -1,0 +1,13 @@
+a.btn-edit,
+button.btn-trash {
+    padding: 0px !important;
+    border: 0px !important;
+}
+
+a.btn-edit i.fas.fa-edit{
+    color: blue;
+}
+
+button.btn-trash i.fa.fa-trash{
+    color: red;
+}

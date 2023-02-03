@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
       
         <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link type="text/css" rel="stylesheet" href="{{asset('css/styles.css')}}">
 
         <!-- Styles -->
         <style>
@@ -27,6 +28,9 @@
 
     </head>
     <body class="antialiased">
+
+        @include('sweetalert::alert')
+
         <!-- Create an table to contacts where display the contacts - name, email, phone -->
         <div class="container d-flex justify-content-center">
             <div class="row">
@@ -43,16 +47,16 @@
                         </thead>
                         <tbody>
                             @foreach ($contacts as $contact)
-                                <tr>
-                                    <td>{{ $contact->name }}</td>
+                                <tr style="align-content: center">
+                                    <td class=""><a style="color:blue;" href="{{ route('contacts.show', $contact->id) }}">{{ $contact->name }}</a></td>
                                     <td>{{ $contact->email }}</td>
                                     <td>{{ $contact->phone }}</td>
                                     <td>
-                                        <a href="{{ route('contacts.edit', $contact->id) }}" class="btn btn-primary"><i class="fas fa-edit" aria-hidden="true"></i></a>
+                                        <a href="{{ route('contacts.edit', $contact->id) }}" class="btn btn-edit"><i class="fas fa-edit"></i></a>
                                         <form action="{{ route('contacts.destroy', $contact->id) }}" method="POST" style="display: inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger"> <i class="fa fa-trash"></i></button>
+                                            <button type="submit" class="btn btn-trash"> <i class="fa fa-trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -62,7 +66,6 @@
                 </div>
             </div>
         </div>
-
 
     </body>
 </html>
