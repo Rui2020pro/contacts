@@ -15,7 +15,8 @@ use App\Http\Controllers\ContactsController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // redirect to contacts list
+    return redirect()->route('contacts.index');
 });
 
 // Create routes to create, edit, delete, and view contacts

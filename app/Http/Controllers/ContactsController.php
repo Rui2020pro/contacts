@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Contacts;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\ToSweetAlert;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ContactsController extends Controller
 {
@@ -15,8 +16,10 @@ class ContactsController extends Controller
      */
     public function index()
     {
+        $contacts = Contacts::all()->sortBy('id');
+
         return view('contacts.list', [
-            'contacts' => Contacts::all()
+            'contacts' => $contacts
         ]);
     }
 
@@ -65,9 +68,13 @@ class ContactsController extends Controller
 
             //return redirect()->route('contacts.index');
 
-            return redirect()->route('contacts.index')->with('success', 'Contact created successfully.');
+            Alert::success('Success', 'Contact created successfully.');
+
+            // create an session flash message
+            return redirect()->route('contacts.index');
         }else{
-            return redirect()->route('contacts.create')->with('error', 'Contact creation failed.');
+            Alert::error('Error', 'Contact not created.');
+            return redirect()->route('contacts.create');
         }
     }
 
@@ -82,7 +89,8 @@ class ContactsController extends Controller
         $contact_show = Contacts::find($id);
 
         if (!$contact_show) {
-            return redirect()->route('contacts.index')->with('error', 'Contact not found.');
+            Alert::error('Error', 'Contact not found.');
+            return redirect()->route('contacts.index');
         }
 
         return view('contacts.create', [
@@ -93,24 +101,72 @@ class ContactsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Contacts  $contacts
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Contacts $contacts)
+    public function edit(int $id)
     {
-        
+        $contact_edit = Contacts::find($id);
+
+        if (!$contact_edit) {
+            Alert::error('Error', 'Contact not found.');
+            return redirect()->route('contacts.index');
+        }
+
+        return view('contacts.create', [
+            'contact_edit' => $contact_edit
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  int $id
      * @param  \App\Models\Contacts  $contacts
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Contacts $contacts)
+    public function update(Request $request, int $id)
     {
-        //
+        $contact = Contacts::find($id);
+
+        if (!$contact) {
+            Alert::error('Error', 'Contact not found.');
+            return redirect()->route('contacts.index');
+        }
+
+        $rules = [
+            'name' => 'required|min:5',
+            'email' => 'required|email',
+            'phone' => 'required|regex:/[0-9]{9}/',
+        ];
+
+        $messages = [
+            'name.required' => 'Name is required',
+            'name.min' => 'Name must be at least 5 characters',
+            'email.required' => 'Email is required',
+            'email.email' => 'Email is invalid',
+            'phone.required' => 'Phone is required',
+            'phone.regex' => 'Phone is invalid',
+        ];
+
+        $validation = $request->validate($rules, $messages);
+
+        if ($validation) {
+            $contact->name = $request->name;
+            $contact->email = $request->email;
+            $contact->phone = $request->phone;
+            $contact->save();
+
+            Alert::success('Success', 'Contact updated successfully.');
+
+            return redirect()->route('contacts.index');
+        }else{
+
+            Alert::error('Error', 'Contact not updated.');
+
+            return redirect()->route('contacts.edit', $id);
+        }
+
     }
 
     /**
@@ -124,10 +180,19 @@ class ContactsController extends Controller
         $contact = Contacts::find($id);
         
         if ($contact) {
+
             $contact->delete();
-            return redirect()->route('contacts.index')->with('success', 'Contact deleted successfully.');
+
+            Alert::success('Success', 'Contact deleted successfully.');
+
+            return redirect()->route('contacts.index');
+           
+            
         }else{
-            return redirect()->route('contacts.index')->with('error', 'Contact deletion failed.');
+
+            Alert::error('Error', 'Contact not found.');
+
+            return redirect()->route('contacts.index');
         }
     }
 }
